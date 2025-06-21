@@ -90,7 +90,6 @@ function renderTaskProgressBars(containerId, data) {
 
     const scores = data.filter(d => taskMapping[d.taskName] === task).map(d => d.score);
     const maxScore = scores.length ? Math.max(...scores) : 0;
-    const minScore = benchmarks[0];
     const maxBenchmark = benchmarks[benchmarks.length - 1];
     const progress = Math.max(0, ((maxScore) / (maxBenchmark)) * 100);
     const level = benchmarks.findIndex((val, idx) => maxScore < (benchmarks[idx + 1] || Infinity));
@@ -160,6 +159,12 @@ function renderTaskProgressBars(containerId, data) {
       let filtered = rawData.filter(d => d.taskName === selectedTask);
       if (start) filtered = filtered.filter(d => d.create_date >= start);
       if (end) filtered = filtered.filter(d => d.create_date <= end);
+
+      const filteredAllTasks = rawData.filter(d => {
+      return (!start || d.create_date >= start) && (!end || d.create_date <= end);
+    });
+
+    renderTaskProgressBars('progressContainer', filteredAllTasks);
 
       const dailyScores = {};
       filtered.forEach(d => {
@@ -239,6 +244,9 @@ function renderTaskProgressBars(containerId, data) {
     document.getElementById('startDate').addEventListener('change', drawChart);
     document.getElementById('endDate').addEventListener('change', drawChart);
 
+    document.getElementById('startDate').addEventListener('change', drawChart);
+    document.getElementById('endDate').addEventListener('change', drawChart);
+
     document.getElementById('fileInput').addEventListener('change', (event) => {
       const file = event.target.files[0];
       if (!file) return;
@@ -249,7 +257,7 @@ function renderTaskProgressBars(containerId, data) {
           const parsed = JSON.parse(e.target.result);
           console.log("📂 Loaded uploaded file", parsed.length);
           loadDataAndInit(parsed);
-          renderTaskProgressBars('progressContainer', rawData);
+          renderTaskProgressBars('progressContainer', filtered);
         } catch (err) {
           console.error("❌ Failed to parse uploaded JSON:", err);
         }
