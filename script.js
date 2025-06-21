@@ -40,17 +40,17 @@ const benchmarkRanges = {
 
   "VT Angelic Click VALORANT": [0, 15, 35, 55, 75, 95, 115, 135],
   "VT MiniTS VALORANT": [55, 65, 75, 85, 95, 105, 115, 125],
-  "VT Micro 2 Sphere VALORANT": [650, 800, 950, 1100, 1250, 1400, 1550],
+  "VT Micro 2 Sphere VALORANT": [550, 650, 800, 950, 1100, 1250, 1400, 1550],
 
-  "VT Peekshot VALORANT": [2575, 3075, 3325, 3575, 4075, 4575, 5075],
-  "VT Micropace VALORANT": [975, 1000, 1075, 1125, 1175, 1225, 1275],
-  "VT Microcluster VALORANT": [600, 700, 750, 800, 900, 1000, 1100],
+  "VT Peekshot VALORANT": [2075, 2575, 3075, 3325, 3575, 4075, 4575, 5075],
+  "VT Micropace VALORANT": [925, 975, 1025, 1075, 1125, 1175, 1225, 1275],
+  "VT Microcluster VALORANT": [500, 600, 700, 750, 800, 900, 1000, 1100],
 
-  "VT Controlstrafes VALORANT": [2950, 3150, 3350, 3550, 4150, 4750, 5350],
-  "VT Peektrack VALORANT": [2175, 2325, 2400, 2475, 2625, 2775, 2925],
+  "VT Controlstrafes VALORANT": [2750, 2950, 3150, 3350, 3550, 4150, 4750, 5350],
+  "VT Peektrack VALORANT": [1975, 2175, 2325, 2400, 2475, 2625, 2775, 2925],
 
-  "VT Angle Track VALORANT": [2975, 3175, 3275, 3375, 3575, 3775, 3975],
-  "VT Adjust Track VALORANT": [2000, 2200, 2300, 2400, 2600, 2800, 3000]
+  "VT Angle Track VALORANT": [2775, 2975, 3175, 3275, 3375, 3575, 3775, 3975],
+  "VT Adjust Track VALORANT": [1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000]
 };
 
 Chart.register(window['chartjs-plugin-annotation']);
@@ -66,7 +66,7 @@ function getBenchmarkAnnotations(taskName) {
   return ranges.map((val, idx) => ({
     type: 'box',
     yMin: val,
-    yMax: ranges[idx + 1] || val + 50,
+    yMax: ranges[idx + 1] || val * 1.1,
     backgroundColor: colors[idx],
     borderWidth: 0
   })).slice(0, 8);
@@ -92,7 +92,7 @@ function renderTaskProgressBars(containerId, data) {
     const maxScore = scores.length ? Math.max(...scores) : 0;
     const minScore = benchmarks[0];
     const maxBenchmark = benchmarks[benchmarks.length - 1];
-    const progress = Math.max(0, ((maxScore - minScore) / (maxBenchmark - minScore)) * 100);
+    const progress = Math.max(0, ((maxScore) / (maxBenchmark)) * 100);
     const level = benchmarks.findIndex((val, idx) => maxScore < (benchmarks[idx + 1] || Infinity));
     const levelColors = ['#a0a0a0', '#c0c0ff', '#d4af37', '#ffd700', '#00b8d9', '#9b5fe0', '#17c964', '#ff4655'];
 
@@ -163,10 +163,10 @@ function renderTaskProgressBars(containerId, data) {
 
       const dailyScores = {};
       filtered.forEach(d => {
-        const date = d.create_date.split('T')[0];
-        if (!dailyScores[date]) dailyScores[date] = [];
-        dailyScores[date].push(d.score);
-      });
+      const date = d.create_date.split('T')[0];
+      if (!dailyScores[date]) dailyScores[date] = [];
+      dailyScores[date].push(Number(d.score));
+    });
 
       const startDate = start ? new Date(start) : new Date(Math.min(...filtered.map(d => new Date(d.create_date))));
       const endDate = end ? new Date(end) : new Date(Math.max(...filtered.map(d => new Date(d.create_date))));
@@ -183,9 +183,9 @@ function renderTaskProgressBars(containerId, data) {
         if (!vals || vals.length === 0) {
           scores.push(null);
         } else {
-          const top = vals.sort((a, b) => b - a).slice(0, 3);
-          scores.push((top.reduce((sum, v) => sum + v, 0) / top.length).toFixed(2));
+          scores.push(Math.max(...vals));
         }
+
 
         currentDate.setDate(currentDate.getDate() + 1);
       }
