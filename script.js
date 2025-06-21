@@ -23,48 +23,111 @@ const taskMapping = {
     };
 
 const benchmarkRanges = {
-  "VT Floatshot VALORANT": [700, 800, 900, 1000],
-  "VT Angleshot VALORANT": [550, 700, 850, 1000],
-  "VT Adjustshot VALORANT": [750, 850, 950, 1050],
-  "VT DotTS VALORANT": [2150, 2350, 2550, 2750],
-  "VT Miniphase VALORANT": [950, 1050, 1150, 1250],
-  "VT Fourshot Adaptive VALORANT": [925, 1025, 1125, 1225],
-  "VT 1w1t VALORANT": [6200, 6600, 7000, 7400],
-  "VT Widereflex VALORANT": [5550, 6100, 6650, 7200],
-  "VT Microshot VALORANT": [400, 600, 800, 1000],
-  "VT Angleshot Micro VALORANT": [900, 1050, 1200, 1350],
-  "VT Skyclick Multi VALORANT": [950, 1050, 1150, 1250],
-  "VT Angelic Click VALORANT": [75, 95, 115, 135],
-  "VT MiniTS VALORANT": [95, 105, 115, 125],
-  "VT Micro 2 Sphere VALORANT": [1100, 1250, 1400, 1550],
-  "VT Peekshot VALORANT": [3575, 4075, 4575, 5075],
-  "VT Micropace VALORANT": [1125, 1175, 1225, 1275],
-  "VT Microcluster VALORANT": [800, 900, 1000, 1100],
-  "VT Controlstrafes VALORANT": [3550, 4150, 4750, 5350],
-  "VT Peektrack VALORANT": [2475, 2625, 2775, 2925],
-  "VT Angle Track VALORANT": [3375, 3575, 3775, 3975],
-  "VT Adjust Track VALORANT": [2400, 2600, 2800, 3000]
+  "VT Floatshot VALORANT": [300, 400, 500, 600, 700, 800, 900, 1000],
+  "VT Angleshot VALORANT": [0, 100, 250, 400, 550, 700, 850, 1000],
+  "VT Adjustshot VALORANT": [350, 450, 550, 650, 750, 850, 950, 1050],
+
+  "VT DotTS VALORANT": [1350, 1550, 1750, 1950, 2150, 2350, 2550, 2750],
+  "VT Miniphase VALORANT": [550, 650, 750, 850, 950, 1050, 1150, 1250],
+  "VT Fourshot Adaptive VALORANT": [525, 625, 725, 825, 925, 1025, 1125, 1225],
+
+  "VT 1w1t VALORANT": [4600, 5000, 5400, 5800, 6200, 6600, 7000, 7400],
+  "VT Widereflex VALORANT": [3350, 3900, 4450, 5000, 5550, 6100, 6650, 7200],
+
+  "VT Microshot VALORANT": [0, 100, 200, 300, 400, 600, 800, 1000],
+  "VT Angleshot Micro VALORANT": [300, 450, 600, 750, 900, 1050, 1200, 1350],
+  "VT Skyclick Multi VALORANT": [550, 650, 750, 850, 950, 1050, 1150, 1250],
+
+  "VT Angelic Click VALORANT": [0, 15, 35, 55, 75, 95, 115, 135],
+  "VT MiniTS VALORANT": [55, 65, 75, 85, 95, 105, 115, 125],
+  "VT Micro 2 Sphere VALORANT": [650, 800, 950, 1100, 1250, 1400, 1550],
+
+  "VT Peekshot VALORANT": [2575, 3075, 3325, 3575, 4075, 4575, 5075],
+  "VT Micropace VALORANT": [975, 1000, 1075, 1125, 1175, 1225, 1275],
+  "VT Microcluster VALORANT": [600, 700, 750, 800, 900, 1000, 1100],
+
+  "VT Controlstrafes VALORANT": [2950, 3150, 3350, 3550, 4150, 4750, 5350],
+  "VT Peektrack VALORANT": [2175, 2325, 2400, 2475, 2625, 2775, 2925],
+
+  "VT Angle Track VALORANT": [2975, 3175, 3275, 3375, 3575, 3775, 3975],
+  "VT Adjust Track VALORANT": [2000, 2200, 2300, 2400, 2600, 2800, 3000]
 };
 
-Chart.register(Chart.registry.getPlugin('annotation'));
+Chart.register(window['chartjs-plugin-annotation']);
 
 function getBenchmarkAnnotations(taskName) {
   const label = taskMapping[taskName];
   const ranges = benchmarkRanges[label];
   if (!ranges) return [];
   const colors = [
-  '#00b8d933', // Platinum - Teal
-  '#9b5fe033', // Diamond - Purple
-  '#17c96433', // Ascendant - Green
-  '#ff465533', // Immortal - Red
-];
+    '#a0a0a033', '#c0c0ff33', '#d4af3733', '#ffd70033',
+    '#00b8d933', '#9b5fe033', '#17c96433', '#ff465533'
+  ];
   return ranges.map((val, idx) => ({
     type: 'box',
     yMin: val,
     yMax: ranges[idx + 1] || val + 50,
     backgroundColor: colors[idx],
     borderWidth: 0
-  })).slice(0, 4);
+  })).slice(0, 8);
+}
+
+function renderTaskProgressBars(containerId, data) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+
+  const wrapper = document.createElement('div');
+  wrapper.style.margin = '2rem auto';
+  wrapper.style.display = 'flex';
+  wrapper.style.flexDirection = 'column';
+  wrapper.style.gap = '0.5rem';
+  wrapper.style.width = '100%';
+  wrapper.style.maxWidth = '800px';
+
+  Object.values(taskMapping).forEach(task => {
+    const benchmarks = benchmarkRanges[task];
+    if (!benchmarks) return;
+
+    const scores = data.filter(d => taskMapping[d.taskName] === task).map(d => d.score);
+    const maxScore = scores.length ? Math.max(...scores) : 0;
+    const minScore = benchmarks[0];
+    const maxBenchmark = benchmarks[benchmarks.length - 1];
+    const progress = Math.max(0, ((maxScore - minScore) / (maxBenchmark - minScore)) * 100);
+    const level = benchmarks.findIndex((val, idx) => maxScore < (benchmarks[idx + 1] || Infinity));
+    const levelColors = ['#a0a0a0', '#c0c0ff', '#d4af37', '#ffd700', '#00b8d9', '#9b5fe0', '#17c964', '#ff4655'];
+
+    const line = document.createElement('div');
+    line.style.display = 'flex';
+    line.style.alignItems = 'center';
+    line.style.gap = '1rem';
+
+    const label = document.createElement('div');
+    label.textContent = task;
+    label.style.width = '220px';
+    label.style.fontSize = '0.9rem';
+    label.style.flexShrink = '0';
+
+    const barContainer = document.createElement('div');
+    barContainer.style.flexGrow = '1';
+    barContainer.style.height = '16px';
+    barContainer.style.background = '#333';
+    barContainer.style.borderRadius = '4px';
+    barContainer.style.overflow = 'hidden';
+
+    const fill = document.createElement('div');
+    fill.style.height = '100%';
+    fill.style.width = `${progress}%`;
+    fill.style.backgroundColor = levelColors[Math.max(0, level)];
+    fill.style.transition = 'width 0.3s';
+
+    barContainer.appendChild(fill);
+    line.appendChild(label);
+    line.appendChild(barContainer);
+
+    wrapper.appendChild(line);
+  });
+
+  container.appendChild(wrapper);
 }
 
     let rawData = [];
@@ -186,6 +249,7 @@ function getBenchmarkAnnotations(taskName) {
           const parsed = JSON.parse(e.target.result);
           console.log("📂 Loaded uploaded file", parsed.length);
           loadDataAndInit(parsed);
+          renderTaskProgressBars('progressContainer', rawData);
         } catch (err) {
           console.error("❌ Failed to parse uploaded JSON:", err);
         }
