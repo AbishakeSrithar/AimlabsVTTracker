@@ -173,8 +173,15 @@ function renderTaskProgressBars(containerId, data) {
       dailyScores[date].push(Number(d.score));
     });
 
-      const startDate = start ? new Date(start) : new Date(Math.min(...filtered.map(d => new Date(d.create_date))));
-      const endDate = end ? new Date(end) : new Date(Math.max(...filtered.map(d => new Date(d.create_date))));
+      const startDate = start
+        ? new Date(start)
+        : new Date(Math.min(...filtered.map(d => new Date(d.create_date).getTime())));
+
+      const endDate = end
+        ? new Date(end)
+        : new Date(Math.max(...filtered.map(d => new Date(d.create_date).getTime())));
+
+      endDate.setHours(23, 59, 59, 999);
 
       const labels = [];
       const scores = [];
@@ -223,7 +230,7 @@ function renderTaskProgressBars(containerId, data) {
             legend: { labels: { color: 'white' } },
             title: {
               display: true,
-              text: 'Score Over Time',
+              text: 'VT Valorant Benchmarks',
               color: 'white',
               font: { size: 18 }
             },
@@ -257,10 +264,21 @@ function renderTaskProgressBars(containerId, data) {
           const parsed = JSON.parse(e.target.result);
           console.log("📂 Loaded uploaded file", parsed.length);
           loadDataAndInit(parsed);
-          renderTaskProgressBars('progressContainer', filtered);
         } catch (err) {
           console.error("❌ Failed to parse uploaded JSON:", err);
         }
       };
       reader.readAsText(file);
     });
+
+window.addEventListener('DOMContentLoaded', () => {
+  // Load default data as fallback
+  fetch('taskData.json')
+    .then(res => res.json())
+    .then(defaultData => {
+      console.log("📦 Loaded default task data");
+      loadDataAndInit(defaultData);
+      renderTaskProgressBars('progressContainer', defaultData);
+    })
+    .catch(err => console.error("❌ Failed to load default taskData.json:", err));
+});
