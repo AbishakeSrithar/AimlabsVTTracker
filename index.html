@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aimlab Task Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Aimlab Voltaic</h1>
+
+  <div class="upload-container">
+    <label for="fileInput" class="upload-label">Upload JSON File:</label>
+    <input type="file" id="fileInput" class="file-input" />
+  </div>
+
+  <div class="controls">
+    <label for="taskSelect">Select Task:</label>
+    <select id="taskSelect"></select>
+
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" />
+
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" />
+
+    <button id="updateBtn" class="btn-primary">Update</button>
+  </div>
+
+  <div class="chart-wrapper">
+    <div class="chart-container">
+      <canvas id="scoreChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-wrapper" id="multiChartWrapper" style="display:none; flex-direction: column; gap: 2rem;"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
