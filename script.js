@@ -22,6 +22,51 @@ const taskMapping = {
       "CsLevel.Lowgravity56.VT Adjus.ROJETY": "VT Adjust Track VALORANT"
     };
 
+const benchmarkRanges = {
+  "VT Floatshot VALORANT": [700, 800, 900, 1000],
+  "VT Angleshot VALORANT": [550, 700, 850, 1000],
+  "VT Adjustshot VALORANT": [750, 850, 950, 1050],
+  "VT DotTS VALORANT": [2150, 2350, 2550, 2750],
+  "VT Miniphase VALORANT": [950, 1050, 1150, 1250],
+  "VT Fourshot Adaptive VALORANT": [925, 1025, 1125, 1225],
+  "VT 1w1t VALORANT": [6200, 6600, 7000, 7400],
+  "VT Widereflex VALORANT": [5550, 6100, 6650, 7200],
+  "VT Microshot VALORANT": [400, 600, 800, 1000],
+  "VT Angleshot Micro VALORANT": [900, 1050, 1200, 1350],
+  "VT Skyclick Multi VALORANT": [950, 1050, 1150, 1250],
+  "VT Angelic Click VALORANT": [75, 95, 115, 135],
+  "VT MiniTS VALORANT": [95, 105, 115, 125],
+  "VT Micro 2 Sphere VALORANT": [1100, 1250, 1400, 1550],
+  "VT Peekshot VALORANT": [3575, 4075, 4575, 5075],
+  "VT Micropace VALORANT": [1125, 1175, 1225, 1275],
+  "VT Microcluster VALORANT": [800, 900, 1000, 1100],
+  "VT Controlstrafes VALORANT": [3550, 4150, 4750, 5350],
+  "VT Peektrack VALORANT": [2475, 2625, 2775, 2925],
+  "VT Angle Track VALORANT": [3375, 3575, 3775, 3975],
+  "VT Adjust Track VALORANT": [2400, 2600, 2800, 3000]
+};
+
+Chart.register(Chart.registry.getPlugin('annotation'));
+
+function getBenchmarkAnnotations(taskName) {
+  const label = taskMapping[taskName];
+  const ranges = benchmarkRanges[label];
+  if (!ranges) return [];
+  const colors = [
+  '#00b8d933', // Platinum - Teal
+  '#9b5fe033', // Diamond - Purple
+  '#17c96433', // Ascendant - Green
+  '#ff465533', // Immortal - Red
+];
+  return ranges.map((val, idx) => ({
+    type: 'box',
+    yMin: val,
+    yMax: ranges[idx + 1] || val + 50,
+    backgroundColor: colors[idx],
+    borderWidth: 0
+  })).slice(0, 4);
+}
+
     let rawData = [];
     let chart;
 
@@ -113,6 +158,9 @@ const taskMapping = {
               text: 'Score Over Time',
               color: 'white',
               font: { size: 18 }
+            },
+            annotation: {
+              annotations: getBenchmarkAnnotations(selectedTask)
             }
           },
           scales: {
