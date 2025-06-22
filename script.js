@@ -72,6 +72,10 @@ function getBenchmarkAnnotations(taskName) {
   })).slice(0, 8);
 }
 
+function rankNameForLevel(level) {
+  return ['Novice', 'Platinum', 'Diamond', 'Ascendant', 'Immortal'][level - 3] || 'Unranked';
+}
+
 function renderTaskProgressBars(containerId, data) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
@@ -90,8 +94,9 @@ function renderTaskProgressBars(containerId, data) {
 
     const scores = data.filter(d => taskMapping[d.taskName] === task).map(d => d.score);
     const maxScore = scores.length ? Math.max(...scores) : 0;
+    const minBenchmark = benchmarks[0];
     const maxBenchmark = benchmarks[benchmarks.length - 1];
-    const progress = Math.max(0, ((maxScore) / (maxBenchmark)) * 100);
+    const progress = Math.max(0, ((maxScore - minBenchmark) / (maxBenchmark - minBenchmark)) * 100);
     const level = benchmarks.findIndex((val, idx) => maxScore < (benchmarks[idx + 1] || Infinity));
     const levelColors = ['#a0a0a0', '#c0c0ff', '#d4af37', '#ffd700', '#00b8d9', '#9b5fe0', '#17c964', '#ff4655'];
 
@@ -118,8 +123,51 @@ function renderTaskProgressBars(containerId, data) {
     fill.style.width = `${progress}%`;
     fill.style.backgroundColor = levelColors[Math.max(0, level)];
     fill.style.transition = 'width 0.3s';
+    fill.title = `Score: ${maxScore} – Rank: ${rankNameForLevel(level)}`;
 
+    barContainer.style.position = 'relative';
+    barContainer.style.marginBottom = '30px';
     barContainer.appendChild(fill);
+    const overlay = document.createElement('div');
+    overlay.textContent = `${maxScore}`;
+    overlay.style.position = 'absolute';
+    overlay.style.left = `${progress}%`;
+    overlay.style.top = '-30px';
+    overlay.style.transform = 'translateX(-50%)';
+    overlay.style.fontSize = '10px';
+    overlay.style.color = 'white';
+    barContainer.appendChild(overlay);
+    
+    // Draw benchmark segments
+    benchmarks.forEach((val, idx) => {
+    const segmentLeft = ((val - minBenchmark) / (maxBenchmark - minBenchmark)) * 100;
+
+    // Tick marker
+    const segment = document.createElement('div');
+    segment.style.position = 'absolute';
+    segment.style.left = `${segmentLeft}%`;
+    segment.style.top = '0';
+    segment.style.bottom = '0';
+    segment.style.width = '2px';
+    segment.style.background = '#ffffff33';
+    barContainer.style.overflow = 'visible';
+    barContainer.appendChild(segment);
+
+    // Label
+    const label = document.createElement('div');
+    label.textContent = val;
+    label.style.position = 'absolute';
+    label.style.left = `${segmentLeft}%`;
+    label.style.bottom = '100%';
+    label.style.top = 'auto';
+    label.style.marginBottom = '2px';
+    label.style.transform = 'translateX(-50%)';
+    label.style.color = '#aaa';
+    label.style.fontSize = '10px';
+    label.style.whiteSpace = 'nowrap';
+    label.style.marginTop = '2px';
+    barContainer.appendChild(label);
+  });
     line.appendChild(label);
     line.appendChild(barContainer);
 
