@@ -23,34 +23,34 @@ const taskMapping = {
     };
 
 const benchmarkRanges = {
-  "VT Floatshot VALORANT": [300, 400, 500, 600, 700, 800, 900, 1000],
-  "VT Angleshot VALORANT": [0, 100, 250, 400, 550, 700, 850, 1000],
-  "VT Adjustshot VALORANT": [350, 450, 550, 650, 750, 850, 950, 1050],
+  "VT Floatshot VALORANT": [300, 400, 500, 600, 700, 800, 900, 1000, 1100],
+  "VT Angleshot VALORANT": [0, 100, 250, 400, 550, 700, 850, 1000, 1150],
+  "VT Adjustshot VALORANT": [350, 450, 550, 650, 750, 850, 950, 1050, 1150],
 
-  "VT DotTS VALORANT": [1350, 1550, 1750, 1950, 2150, 2350, 2550, 2750],
-  "VT Miniphase VALORANT": [550, 650, 750, 850, 950, 1050, 1150, 1250],
-  "VT Fourshot Adaptive VALORANT": [525, 625, 725, 825, 925, 1025, 1125, 1225],
+  "VT DotTS VALORANT": [1350, 1550, 1750, 1950, 2150, 2350, 2550, 2750, 2950],
+  "VT Miniphase VALORANT": [550, 650, 750, 850, 950, 1050, 1150, 1250, 1350],
+  "VT Fourshot Adaptive VALORANT": [525, 625, 725, 825, 925, 1025, 1125, 1225, 1325],
 
-  "VT 1w1t VALORANT": [4600, 5000, 5400, 5800, 6200, 6600, 7000, 7400],
-  "VT Widereflex VALORANT": [3350, 3900, 4450, 5000, 5550, 6100, 6650, 7200],
+  "VT 1w1t VALORANT": [4600, 5000, 5400, 5800, 6200, 6600, 7000, 7400, 7800],
+  "VT Widereflex VALORANT": [3350, 3900, 4450, 5000, 5550, 6100, 6650, 7200, 7750],
 
-  "VT Microshot VALORANT": [0, 100, 200, 300, 400, 600, 800, 1000],
-  "VT Angleshot Micro VALORANT": [300, 450, 600, 750, 900, 1050, 1200, 1350],
-  "VT Skyclick Multi VALORANT": [550, 650, 750, 850, 950, 1050, 1150, 1250],
+  "VT Microshot VALORANT": [0, 100, 200, 300, 400, 600, 800, 1000, 1200],
+  "VT Angleshot Micro VALORANT": [300, 450, 600, 750, 900, 1050, 1200, 1350, 1500],
+  "VT Skyclick Multi VALORANT": [550, 650, 750, 850, 950, 1050, 1150, 1250, 1350],
 
-  "VT Angelic Click VALORANT": [0, 15, 35, 55, 75, 95, 115, 135],
-  "VT MiniTS VALORANT": [55, 65, 75, 85, 95, 105, 115, 125],
-  "VT Micro 2 Sphere VALORANT": [550, 650, 800, 950, 1100, 1250, 1400, 1550],
+  "VT Angelic Click VALORANT": [0, 15, 35, 55, 75, 95, 115, 135, 155],
+  "VT MiniTS VALORANT": [55, 65, 75, 85, 95, 105, 115, 125, 135],
+  "VT Micro 2 Sphere VALORANT": [550, 650, 800, 950, 1100, 1250, 1400, 1550, 1700],
 
-  "VT Peekshot VALORANT": [2075, 2575, 3075, 3325, 3575, 4075, 4575, 5075],
-  "VT Micropace VALORANT": [925, 975, 1025, 1075, 1125, 1175, 1225, 1275],
-  "VT Microcluster VALORANT": [500, 600, 700, 750, 800, 900, 1000, 1100],
+  "VT Peekshot VALORANT": [2075, 2575, 3075, 3325, 3575, 4075, 4575, 5075, 5575],
+  "VT Micropace VALORANT": [925, 975, 1025, 1075, 1125, 1175, 1225, 1275, 1325],
+  "VT Microcluster VALORANT": [500, 600, 700, 750, 800, 900, 1000, 1100, 1200],
 
-  "VT Controlstrafes VALORANT": [2750, 2950, 3150, 3350, 3550, 4150, 4750, 5350],
-  "VT Peektrack VALORANT": [1975, 2175, 2325, 2400, 2475, 2625, 2775, 2925],
+  "VT Controlstrafes VALORANT": [2750, 2950, 3150, 3350, 3550, 4150, 4750, 5350, 5950],
+  "VT Peektrack VALORANT": [1975, 2175, 2325, 2400, 2475, 2625, 2775, 2925, 3075],
 
-  "VT Angle Track VALORANT": [2775, 2975, 3175, 3275, 3375, 3575, 3775, 3975],
-  "VT Adjust Track VALORANT": [1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000]
+  "VT Angle Track VALORANT": [2775, 2975, 3175, 3275, 3375, 3575, 3775, 3975, 4175],
+  "VT Adjust Track VALORANT": [1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000, 3200]
 };
 
 Chart.register(window['chartjs-plugin-annotation']);
@@ -60,20 +60,20 @@ function getBenchmarkAnnotations(taskName) {
   const ranges = benchmarkRanges[label];
   if (!ranges) return [];
   const colors = [
-    '#a0a0a033', '#c0c0ff33', '#d4af3733', '#ffd70033',
-    '#00b8d933', '#9b5fe033', '#17c96433', '#ff465533'
+    '#222222', '#cd7f32bb', '#c0c0c0', '#FFD70099',
+    '#00b8d933', '#9b5fe033', '#17c96433', '#ff465599'
   ];
-  return ranges.map((val, idx) => ({
-    type: 'box',
-    yMin: val,
-    yMax: ranges[idx + 1] || val * 1.1,
-    backgroundColor: colors[idx],
-    borderWidth: 0
-  })).slice(0, 8);
+  return ranges.slice(0, -1).map((val, idx) => ({
+  type: 'box',
+  yMin: val,
+  yMax: ranges[idx + 1],
+  backgroundColor: colors[idx],
+  borderWidth: 0
+}));
 }
 
 function rankNameForLevel(level) {
-  return ['Novice', 'Platinum', 'Diamond', 'Ascendant', 'Immortal'][level - 3] || 'Unranked';
+  return ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal'][level] || 'Off The Charts';
 }
 
 function renderTaskProgressBars(containerId, data) {
@@ -92,13 +92,14 @@ function renderTaskProgressBars(containerId, data) {
     const benchmarks = benchmarkRanges[task];
     if (!benchmarks) return;
 
-    const scores = data.filter(d => taskMapping[d.taskName] === task).map(d => d.score);
+    const scores = data.filter(row => taskMapping[row.taskName] === task).map(row => row.score);
     const maxScore = scores.length ? Math.max(...scores) : 0;
     const minBenchmark = benchmarks[0];
     const maxBenchmark = benchmarks[benchmarks.length - 1];
     const progress = Math.max(0, ((maxScore - minBenchmark) / (maxBenchmark - minBenchmark)) * 100);
-    const level = benchmarks.findIndex((val, idx) => maxScore < (benchmarks[idx + 1] || Infinity));
-    const levelColors = ['#a0a0a0', '#c0c0ff', '#d4af37', '#ffd700', '#00b8d9', '#9b5fe0', '#17c964', '#ff4655'];
+    let level = benchmarks.findIndex((val, idx) => maxScore < benchmarks[idx + 1]);
+    if (level === -1) level = benchmarks.length - 1;
+    const levelColors = ['#a0a0a0', '#c0c0ff', '#d4af37', '#ffd700', '#00b8d9', '#9b5fe0', '#17c964', '#ff4655', '#ff4655'];
 
     const line = document.createElement('div');
     line.style.display = 'flex';
@@ -182,7 +183,7 @@ function renderTaskProgressBars(containerId, data) {
 
     function loadDataAndInit(data) {
       rawData = data;
-      console.log(`📊 Loaded ${rawData.length} entries from JSON`);
+      console.log(`JSON Loaded ${rawData.length} entries from JSON`);
       populateDropdown();
       drawChart();
     }
@@ -204,30 +205,30 @@ function renderTaskProgressBars(containerId, data) {
       const start = document.getElementById('startDate').value;
       const end = document.getElementById('endDate').value;
 
-      let filtered = rawData.filter(d => d.taskName === selectedTask);
-      if (start) filtered = filtered.filter(d => d.create_date >= start);
-      if (end) filtered = filtered.filter(d => d.create_date <= end);
+      let filtered = rawData.filter(row => row.taskName === selectedTask);
+      if (start) filtered = filtered.filter(row => row.create_date >= start);
+      if (end) filtered = filtered.filter(row => row.create_date <= end);
 
       const filteredAllTasks = rawData.filter(d => {
       return (!start || d.create_date >= start) && (!end || d.create_date <= end);
     });
 
-    renderTaskProgressBars('progressContainer', filteredAllTasks);
+      renderTaskProgressBars('progressContainer', filteredAllTasks);
 
       const dailyScores = {};
-      filtered.forEach(d => {
-      const date = d.create_date.split('T')[0];
+      filtered.forEach(row => {
+      const date = row.create_date.split('T')[0];
       if (!dailyScores[date]) dailyScores[date] = [];
-      dailyScores[date].push(Number(d.score));
+        dailyScores[date].push(Number(row.score));
     });
 
       const startDate = start
         ? new Date(start)
-        : new Date(Math.min(...filtered.map(d => new Date(d.create_date).getTime())));
+        : new Date(Math.min(...filtered.map(row => new Date(row.create_date).getTime())));
 
       const endDate = end
         ? new Date(end)
-        : new Date(Math.max(...filtered.map(d => new Date(d.create_date).getTime())));
+        : new Date(Math.max(...filtered.map(row => new Date(row.create_date).getTime())));
 
       endDate.setHours(23, 59, 59, 999);
 
@@ -310,10 +311,10 @@ function renderTaskProgressBars(containerId, data) {
       reader.onload = (e) => {
         try {
           const parsed = JSON.parse(e.target.result);
-          console.log("📂 Loaded uploaded file", parsed.length);
+          console.log("Loaded uploaded file", parsed.length);
           loadDataAndInit(parsed);
         } catch (err) {
-          console.error("❌ Failed to parse uploaded JSON:", err);
+          console.error("Failed to parse uploaded JSON:", err);
         }
       };
       reader.readAsText(file);
@@ -324,9 +325,9 @@ window.addEventListener('DOMContentLoaded', () => {
   fetch('taskData.json')
     .then(res => res.json())
     .then(defaultData => {
-      console.log("📦 Loaded default task data");
+      console.log("Loaded default task data");
       loadDataAndInit(defaultData);
       renderTaskProgressBars('progressContainer', defaultData);
     })
-    .catch(err => console.error("❌ Failed to load default taskData.json:", err));
+    .catch(err => console.error("Failed to load default taskData.json:", err));
 });
